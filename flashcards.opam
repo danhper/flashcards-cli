@@ -1,0 +1,15 @@
+opam-version: "2.0"
+name: "flashcards"
+version: "0.1"
+synopsis: "Terminal based flashcards"
+maintainer: "Daniel Perez <daniel@perez.sh>"
+authors: "Daniel Perez <daniel@perez.sh>"
+license: "MIT"
+homepage: "https://github.com/tuvistavie/flashcards-cli"
+bug-reports: "https://github.com/tuvistavie/flashcards-cli"
+build: ["dune" "build" "--root" "." "-j" jobs "@install"]
+depends: [
+  "core"     {>= "v0.11" & < "v0.12" }
+
+  "dune"     {build & >= "1.0" & < "2.0" }
+]

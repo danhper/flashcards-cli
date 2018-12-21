@@ -1,0 +1,5 @@
+(library
+  (name flashcards)
+  (libraries core)
+  (preprocess (pps ppx_let))
+  (public_name flashcards))

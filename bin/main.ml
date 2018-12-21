@@ -1,0 +1,1 @@
+let () = Flashcards.Cli.run ()
