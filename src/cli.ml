@@ -17,7 +17,7 @@ let show_flashcard_command =
       |> map ~f:(fun v -> Option.some_if v `Random)
     ]
     in
-    fun () -> Commands.show_command choice
+    fun () -> Commands.show_command (Config.load ()) choice
   ]
 
 let flashcards_command =
