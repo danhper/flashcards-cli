@@ -1,7 +1,11 @@
 open Core
 
 module Record: sig
-  type t
+  type t = {
+    word: String.t;
+    translation: String.t;
+    notes: String.t Option.t;
+  }
 
   val create: String.t -> String.t -> String.t Option.t -> t
   val format: t -> String.t

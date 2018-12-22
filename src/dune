@@ -1,5 +1,5 @@
 (library
   (name flashcards)
-  (libraries yojson core ppx_deriving_yojson.runtime)
+  (libraries yojson core ppx_deriving_yojson.runtime camomile)
   (preprocess (pps ppx_let ppx_deriving_yojson))
   (public_name flashcards))
