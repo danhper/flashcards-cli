@@ -6,7 +6,7 @@ let show_record opt_record = match opt_record with
 
 let load_vocabulary config =
   let vocab_path = Config.vocabulary_path config in
-  Vocabulary.from_file vocab_path (module MarkdownTable.Parser)
+  MarkdownTable.Io.from_file vocab_path
 
 let show_command config choice =
   let vocabulary = load_vocabulary config in

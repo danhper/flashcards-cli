@@ -22,7 +22,7 @@ let rec run_quiz vocabulary quiz_type =
   Out_channel.flush Out_channel.stdout;
 
   match In_channel.input_line In_channel.stdin with
-  | None -> ()
+  | None -> VocabularyIo.save_weights vocabulary
   | Some user_answer ->
     let ((=)) = String.Caseless.equal in
     let answer_tokens = String.split ~on:' ' answer in

@@ -13,25 +13,31 @@ module Record = struct
     word ^ ": " ^ translation ^ (Option.value ~default:"" (Option.map ~f notes))
 end
 
-type int_hashtbl = (int* string) list [@@deriving yojson { exn = true }]
+
+module Weights = struct
+  type t = Int.t String.Table.t
+  type int_hashtbl = (string * int) list [@@deriving yojson]
+
+  let to_json t = int_hashtbl_to_yojson (String.Table.to_alist t)
+  let of_json json =
+    json
+    |> int_hashtbl_of_yojson
+    |> Result.map ~f:String.Table.of_alist_exn
+    |> Result.ok
+end
 
 type t = {
   records: Record.t List.t;
-  weights: Int.t String.Table.t;
+  weights: Weights.t;
 }
-
-module type Parser = sig
-  val parse: String.t -> t
-end
-
 
 let max_weight = 16
 
 let empty = { records = []; weights = String.Table.create () }
 
-let create records = { records; weights = String.Table.create () }
-
-let from_file filename (module P: Parser) = P.parse (In_channel.read_all filename)
+let create ?weights records =
+  let weights = Option.value ~default:(String.Table.create ()) weights in
+  { records; weights; }
 
 let size { records; _ } = List.length records
 
@@ -48,6 +54,8 @@ let increase_weight t record =
 let decrease_weight t record =
   let f w = if w = 1 then w else w / 2 in
   modify_weight t record ~f
+
+let weights t = t.weights
 
 let search_by_word { records; _ } word =
   let f record =

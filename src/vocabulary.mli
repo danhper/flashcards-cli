@@ -13,14 +13,17 @@ end
 
 type t
 
-module type Parser = sig
-  val parse: String.t -> t
+module Weights: sig
+  type t
+
+  val to_json: t -> Yojson.Safe.json
+  val of_json: Yojson.Safe.json -> t Option.t
 end
 
 val empty: t
-val create: Record.t List.t -> t
-val from_file: String.t -> (module Parser) -> t
+val create: ?weights:Weights.t -> Record.t List.t -> t
 val size: t -> int
+val weights: t -> Weights.t
 val search_by_word: t -> String.t -> Record.t Option.t
 val search_by_translation: t -> String.t -> Record.t Option.t
 val random_record: t ->  Record.t Option.t
