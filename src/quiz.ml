@@ -17,7 +17,6 @@ let rec run_quiz vocabulary quiz_type =
   | GuessWord -> (record.translation, record.word)
   | GuessTranslation -> (record.word, record.translation)
   in
-  let answer_tokens = String.split ~on:' ' answer in
 
   Out_channel.printf "%s: " question;
   Out_channel.flush Out_channel.stdout;
@@ -25,9 +24,14 @@ let rec run_quiz vocabulary quiz_type =
   match In_channel.input_line In_channel.stdin with
   | None -> ()
   | Some user_answer ->
-    if String.Caseless.equal answer user_answer ||
-       List.exists ~f:(String.Caseless.equal user_answer) answer_tokens
-      then Out_channel.print_endline ("✔ " ^ (format record))
-      else Out_channel.print_endline ("✗ " ^ (format record));
+    let ((=)) = String.Caseless.equal in
+    let answer_tokens = String.split ~on:' ' answer in
+    let good_answer = answer = user_answer ||
+                      List.exists ~f:((=) user_answer) answer_tokens in
+    let (func, prefix) = if good_answer
+                           then (Vocabulary.decrease_weight, "✔ ")
+                           else (Vocabulary.increase_weight, "✗ ") in
+    func vocabulary record;
+    Out_channel.print_endline (prefix ^ (format record));
     Out_channel.newline Out_channel.stdout;
     run_quiz vocabulary quiz_type
