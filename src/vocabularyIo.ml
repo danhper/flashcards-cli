@@ -1,15 +1,13 @@
 open Core
 
-let weights_path = Filename.concat Config.dir "weights.json"
-
 let save_weights vocab =
   let weights = Vocabulary.weights vocab in
   let json_weights = Vocabulary.Weights.to_json weights in
-  Yojson.Safe.to_file weights_path json_weights
+  Yojson.Safe.to_file Config.weights_path json_weights
 
 let load_weights () =
-  if Sys.file_exists_exn weights_path
-    then Vocabulary.Weights.of_json (Yojson.Safe.from_file weights_path)
+  if Sys.file_exists_exn Config.weights_path
+    then Vocabulary.Weights.of_json (Yojson.Safe.from_file Config.weights_path)
     else None
 
 module type S = sig

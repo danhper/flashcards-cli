@@ -29,10 +29,25 @@ let quiz_command =
     fun () -> Commands.quiz_command (Config.load ()) quiz_type
   ]
 
+let init_command =
+  let open Command.Let_syntax in
+  Command.basic
+  ~summary:"Initialize flashcards"
+  (return Commands.init_command)
+
+
+let reset_weights_command =
+  let open Command.Let_syntax in
+  Command.basic
+  ~summary:"Reset flashcards weights"
+  (return Commands.reset_weights)
+
 let flashcards_command =
   Command.group ~summary:"CLI based flashcards" [
     ("show", show_command);
     ("quiz", quiz_command);
+    ("init", init_command);
+    ("reset-weights", reset_weights_command);
   ]
 
 let run () =

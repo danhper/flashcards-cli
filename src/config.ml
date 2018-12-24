@@ -5,10 +5,14 @@ let dir =
   Option.value ~default (Sys.getenv "FLASHCARDS_HOME")
 
 let config_path = Filename.concat dir "config.json"
+let weights_path = Filename.concat dir "weights.json"
 
 type t = {
   vocabulary_path: string
 } [@@deriving yojson { exn = true }]
+
+
+let create vocabulary_path = { vocabulary_path }
 
 let from_file filepath =
   let json = Yojson.Safe.from_file filepath in

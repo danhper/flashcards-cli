@@ -1,5 +1,17 @@
 open Core
 
+let init_command () =
+  Unix.mkdir_p ~perm:0o755 Config.dir;
+  Out_channel.printf "vocabulary path: ";
+  Out_channel.flush Out_channel.stdout;
+  match In_channel.input_line In_channel.stdin with
+  | Some filepath -> Config.save (Config.create filepath)
+  | None -> Out_channel.prerr_endline "could not read vocabulary path"
+
+let reset_weights () =
+  if Sys.file_exists_exn Config.weights_path
+    then Unix.unlink Config.weights_path
+
 let show_record opt_record = match opt_record with
   | Some record -> Out_channel.print_endline (Vocabulary.Record.format record)
   | None -> Out_channel.prerr_endline "no record found"
