@@ -8,11 +8,12 @@ let config_path = Filename.concat dir "config.json"
 let weights_path = Filename.concat dir "weights.json"
 
 type t = {
-  vocabulary_path: string
+  vocabulary_path: string;
+  search_url: string option [@default None];
 } [@@deriving yojson { exn = true }]
 
 
-let create vocabulary_path = { vocabulary_path }
+let create vocabulary_path = { vocabulary_path; search_url = None; }
 
 let from_file filepath =
   let json = Yojson.Safe.from_file filepath in
@@ -25,4 +26,5 @@ let to_file t filepath =
 let load () = from_file config_path
 let save t = to_file t config_path
 
-let vocabulary_path { vocabulary_path } = vocabulary_path
+let vocabulary_path { vocabulary_path; _ } = vocabulary_path
+let search_url { search_url; _ } = search_url

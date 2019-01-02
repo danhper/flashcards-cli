@@ -17,7 +17,7 @@ let show_command =
       |> map ~f:(fun v -> Option.some_if v `Random)
     ]
     in
-    fun () -> Commands.show_command (Config.load ()) choice
+    fun () -> Commands.show (Config.load ()) choice
   ]
 
 let quiz_command =
@@ -26,15 +26,23 @@ let quiz_command =
   ~summary:"Runs a quiz"
   [%map_open
     let quiz_type = anon ("type" %: (Arg_type.create Quiz.QuizType.of_string)) in
-    fun () -> Commands.quiz_command (Config.load ()) quiz_type
+    fun () -> Commands.quiz (Config.load ()) quiz_type
   ]
 
 let init_command =
   let open Command.Let_syntax in
   Command.basic
   ~summary:"Initialize flashcards"
-  (return Commands.init_command)
+  (return Commands.init)
 
+let search_command =
+  let open Command.Let_syntax in
+  Command.basic
+  ~summary:"Search for a word"
+  [%map_open
+    let word = anon ("word" %: string) in
+    fun () -> Commands.search (Config.load ()) word
+  ]
 
 let reset_weights_command =
   let open Command.Let_syntax in
@@ -48,6 +56,7 @@ let flashcards_command =
     ("quiz", quiz_command);
     ("init", init_command);
     ("reset-weights", reset_weights_command);
+    ("search", search_command);
   ]
 
 let run () =
