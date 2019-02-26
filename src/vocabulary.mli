@@ -16,8 +16,8 @@ type t
 module Weights: sig
   type t
 
-  val to_json: t -> Yojson.Safe.json
-  val of_json: Yojson.Safe.json -> t Option.t
+  val to_json: t -> Yojson.Safe.t
+  val of_json: Yojson.Safe.t -> t Option.t
 end
 
 val empty: t
