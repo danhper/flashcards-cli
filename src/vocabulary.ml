@@ -74,10 +74,17 @@ let search_by_translation { records; _ } translation =
   | result -> result
 
 let random_record { records; weights } =
-  let append_records acc elem =
-    let count = Option.value ~default:1 (Hashtbl.find weights elem.Record.word) in
-    let list = List.init count ~f:(const elem) in
-    acc @ list
+  let get_weight i elem =
+    let weight_opt = Hashtbl.find weights elem.Record.word in
+    let weight = Option.value_map ~f:Int.to_float ~default:1. weight_opt in
+    (* NOTE: add weight to recent words *)
+    weight +. (Int.to_float i) /. 10.
   in
-  let weighted_records = List.fold records ~init:[] ~f:append_records in
-  List.random_element weighted_records
+  let probs = List.mapi records ~f:get_weight in
+  let cdf_f (v, acc) elem = let sum = v +. elem in (sum, sum :: acc) in
+  let (sum, cdf) = List.fold ~init:(0., []) ~f:cdf_f probs in
+  let cdf_probs = List.map ~f:(fun v -> v /. sum) cdf in
+  let random_value = Random.float 1. in
+  let res = List.findi ~f:(fun _i v -> random_value > v) cdf_probs in
+  let index = Option.map ~f:(fun v -> (fst v) + 1) res in
+  Option.bind ~f:(List.nth records) index
