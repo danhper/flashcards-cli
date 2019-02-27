@@ -6,6 +6,12 @@ module QuizType = struct
   | "guess-word" -> GuessWord
   | "guess-translation" -> GuessTranslation
   | _ -> failwith "only 'guess-word' and 'guess-translation' available"
+
+  let arg =
+    let complete _env ~part =
+      List.filter ["guess-word"; "guess-translation"] ~f:(String.is_prefix ~prefix:part)
+    in
+    Command.Arg_type.create ~complete of_string
 end
 
 let rec run_quiz vocabulary quiz_type =

@@ -3,17 +3,18 @@ open Core
 let show_command =
   let open Command.Let_syntax in
   Command.basic
-  ~summary:"Shows a single flashcard. Only one of the three options must be provided"
+  ~summary:"Shows a single flashcard."
+  ~readme:(fun _ -> "Only one of the three flags must be provided")
   [%map_open
     let choice = choose_one ~if_nothing_chosen:`Raise
       [ flag "-translation" (optional string)
-        ~aliases:["-t"] ~doc:"the translation of the card to show"
+        ~aliases:["-t"] ~doc:"translation of the card to show"
       |> map ~f:(Option.map ~f:(fun v -> `Translation v))
       ; flag "-word" (optional string)
-        ~aliases:["-w"] ~doc:"the word of the card to show"
+        ~aliases:["-w"] ~doc:"word of the card to show"
       |> map ~f:(Option.map ~f:(fun v -> `Word v))
       ; flag "-random" no_arg
-        ~aliases:["-r"] ~doc:"shows a random card"
+        ~aliases:["-r"] ~doc:"random card"
       |> map ~f:(fun v -> Option.some_if v `Random)
     ]
     in
@@ -24,8 +25,9 @@ let quiz_command =
   let open Command.Let_syntax in
   Command.basic
   ~summary:"Runs a quiz"
+  ~readme:(Fn.const "The types of quiz are 'guess-word' and 'guess-translation'")
   [%map_open
-    let quiz_type = anon ("type" %: (Arg_type.create Quiz.QuizType.of_string)) in
+    let quiz_type = anon ("type" %: Quiz.QuizType.arg) in
     fun () -> Commands.quiz (Config.load ()) quiz_type
   ]
 
