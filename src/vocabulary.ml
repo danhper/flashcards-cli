@@ -31,7 +31,8 @@ type t = {
   weights: Weights.t;
 }
 
-let max_weight = 16
+let max_weight = 100000
+let weight_multiple = 5
 
 let empty = { records = []; weights = String.Table.create () }
 
@@ -48,11 +49,11 @@ let modify_weight t record ~f =
   Hashtbl.set t.weights ~key ~data:new_weight
 
 let increase_weight t record =
-  let f w = if w >= max_weight then w else w * 2 in
+  let f w = if w >= max_weight then w else w * weight_multiple in
   modify_weight t record ~f
 
 let decrease_weight t record =
-  let f w = if w = 1 then w else w / 2 in
+  let f w = if w <= 1 then 1 else w / weight_multiple in
   modify_weight t record ~f
 
 let weights t = t.weights
@@ -78,7 +79,7 @@ let random_record { records; weights } =
     let weight_opt = Hashtbl.find weights elem.Record.word in
     let weight = Option.value_map ~f:Int.to_float ~default:1. weight_opt in
     (* NOTE: add weight to recent words *)
-    weight +. (Int.to_float i) /. 10.
+    weight +. (Int.to_float i)
   in
   let probs = List.mapi records ~f:get_weight in
   let cdf_f (v, acc) elem = let sum = v +. elem in (sum, sum :: acc) in
