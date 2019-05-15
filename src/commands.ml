@@ -27,6 +27,11 @@ let show config choice =
   | `Word w -> show_record (Vocabulary.search_by_word vocabulary w)
   | `Random -> show_record (Vocabulary.random_record vocabulary)
 
+let top_n config n =
+  let vocabulary = load_vocabulary config in
+  let top_n = Vocabulary.get_top_n vocabulary n in
+  List.iter ~f:(Fn.compose print_endline Vocabulary.Record.format) top_n
+
 let quiz config quiz_type =
   let vocabulary = load_vocabulary config in
   Quiz.run_quiz vocabulary quiz_type

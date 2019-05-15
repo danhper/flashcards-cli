@@ -89,3 +89,11 @@ let random_record { records; weights } =
   let res = List.findi ~f:(fun _i v -> random_value <= v) cdf_probs in
   let index = Option.map ~f:fst res in
   Option.bind ~f:(List.nth records) index
+
+let get_top_n { records; weights; } n =
+  let get_weight elem =
+    let weight_opt = Hashtbl.find weights elem.Record.word in
+    Option.value ~default:1 weight_opt
+  in
+  let compare r1 r2 = - Int.compare (get_weight r1) (get_weight r2) in
+  List.take (List.sort ~compare records) n

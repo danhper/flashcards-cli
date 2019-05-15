@@ -46,6 +46,16 @@ let search_command =
     fun () -> Commands.search (Config.load ()) word
   ]
 
+
+let top_n_command =
+  let open Command.Let_syntax in
+  Command.basic
+  ~summary:"Shows top words most missed"
+  [%map_open
+    let n = flag "-n" (optional_with_default 5 int) ~doc:"number of words to show" in
+    fun () -> Commands.top_n (Config.load ()) n
+  ]
+
 let reset_weights_command =
   let open Command.Let_syntax in
   Command.basic
@@ -59,6 +69,7 @@ let flashcards_command =
     ("init", init_command);
     ("reset-weights", reset_weights_command);
     ("search", search_command);
+    ("top-n", top_n_command);
   ]
 
 let run () =
