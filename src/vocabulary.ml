@@ -81,11 +81,11 @@ let random_record { records; weights } =
     (* NOTE: add weight to recent words *)
     weight +. (Int.to_float i)
   in
-  let probs = List.mapi records ~f:get_weight in
+  let weights = List.mapi records ~f:get_weight in
   let cdf_f (v, acc) elem = let sum = v +. elem in (sum, sum :: acc) in
-  let (sum, cdf) = List.fold ~init:(0., []) ~f:cdf_f probs in
-  let cdf_probs = List.map ~f:(fun v -> v /. sum) cdf in
+  let (sum, cum_weights) = List.fold ~init:(0., []) ~f:cdf_f weights in
+  let cdf_probs = List.rev_map ~f:(fun v -> v /. sum) cum_weights in
   let random_value = Random.float 1. in
-  let res = List.findi ~f:(fun _i v -> random_value > v) cdf_probs in
-  let index = Option.map ~f:(fun v -> (fst v) + 1) res in
+  let res = List.findi ~f:(fun _i v -> random_value <= v) cdf_probs in
+  let index = Option.map ~f:fst res in
   Option.bind ~f:(List.nth records) index
