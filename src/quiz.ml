@@ -37,6 +37,5 @@ let rec run_quiz vocabulary quiz_type =
                            then (Vocabulary.decrease_weight, "✔ ")
                            else (Vocabulary.increase_weight, "✗ ") in
     func vocabulary record;
-    Out_channel.print_endline (prefix ^ (format record));
-    Out_channel.newline Out_channel.stdout;
+    Out_channel.print_endline (prefix ^ (format record) ^ "\n");
     run_quiz vocabulary quiz_type
