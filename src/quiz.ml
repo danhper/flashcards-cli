@@ -24,10 +24,9 @@ let rec run_quiz vocabulary quiz_type =
   | GuessTranslation -> (record.word, record.translation)
   in
 
-  Out_channel.printf "%s: " question;
-  Out_channel.flush Out_channel.stdout;
+  let prompt = question ^ ": " in
 
-  match In_channel.input_line In_channel.stdin with
+  match LNoise.linenoise prompt with
   | None -> VocabularyIo.save_weights vocabulary
   | Some user_answer ->
     let ((=)) = String.Caseless.equal in
