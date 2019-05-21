@@ -2,9 +2,7 @@ open Core
 
 let init () =
   Unix.mkdir_p ~perm:0o755 Config.dir;
-  Out_channel.printf "vocabulary path: ";
-  Out_channel.flush Out_channel.stdout;
-  match In_channel.input_line In_channel.stdin with
+  match LNoise.linenoise "vocabulary path: " with
   | Some filepath -> Config.save (Config.create filepath)
   | None -> Out_channel.prerr_endline "could not read vocabulary path"
 
