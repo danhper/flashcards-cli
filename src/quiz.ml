@@ -30,7 +30,7 @@ let rec run_quiz vocabulary quiz_type =
   | None -> VocabularyIo.save_weights vocabulary
   | Some user_answer ->
     let ((=)) = String.Caseless.equal in
-    let answer_tokens = String.split ~on:' ' answer in
+    let answer_tokens = String.split_on_chars ~on:[' '; ','] answer in
     let good_answer = answer = user_answer ||
                       List.exists ~f:((=) user_answer) answer_tokens in
     let (func, prefix) = if good_answer
