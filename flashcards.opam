@@ -9,7 +9,7 @@ homepage: "https://github.com/tuvistavie/flashcards-cli"
 bug-reports: "https://github.com/tuvistavie/flashcards-cli"
 build: ["dune" "build" "--root" "." "-j" jobs "@install"]
 depends: [
-  "core"                {>= "v0.11" & < "v0.12"}
+  "core"                {>= "v0.12" & < "v0.13"}
   "yojson"              {>= "1.6"   & < "2.0"}
   "ppx_deriving_yojson" {>= "3.3"   & < "4.0"}
   "linenoise"           {>= "1.2"   & < "2.0"}
