@@ -18,4 +18,19 @@ module Parser: VocabularyIo.Parser = struct
     |> List.filter_map ~f:Fn.id
 end
 
-module Io: VocabularyIo.S = VocabularyIo.Make(Parser)
+module Formatter: VocabularyIo.Formatter = struct
+  let format_records records =
+    let open Vocabulary.Record in
+    let lines = [
+      "German | Translation | Notes";
+      "-------|-------------|------";
+    ] in
+    let format_record record =
+      let row = [record.word; record.translation; Option.value ~default:"" record.notes] in
+      String.concat ~sep:" | " row
+    in
+    String.concat ~sep:"\n" (lines @ (List.map ~f:format_record records))
+end
+
+module In: VocabularyIo.In = VocabularyIo.MakeIn(Parser)
+module Out: VocabularyIo.Out = VocabularyIo.MakeOut(Formatter)

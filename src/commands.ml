@@ -16,7 +16,7 @@ let show_record opt_record = match opt_record with
 
 let load_vocabulary config =
   let vocab_path = Config.vocabulary_path config in
-  MarkdownTable.Io.from_file vocab_path
+  MarkdownTable.In.from_file vocab_path
 
 let show config choice =
   let vocabulary = load_vocabulary config in
@@ -24,6 +24,10 @@ let show config choice =
   | `Translation tr -> show_record (Vocabulary.search_by_translation vocabulary tr)
   | `Word w -> show_record (Vocabulary.search_by_word vocabulary w)
   | `Random -> show_record (Vocabulary.random_record vocabulary)
+
+let export_vocabulary config filename =
+  let vocabulary = load_vocabulary config in
+  MarkdownTable.Out.to_file vocabulary filename
 
 let top_n config n =
   let vocabulary = load_vocabulary config in

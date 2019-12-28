@@ -46,7 +46,6 @@ let search_command =
     fun () -> Commands.search (Config.load ()) word
   ]
 
-
 let top_n_command =
   let open Command.Let_syntax in
   Command.basic
@@ -54,6 +53,15 @@ let top_n_command =
   [%map_open
     let n = flag "-n" (optional_with_default 5 int) ~doc:"number of words to show" in
     fun () -> Commands.top_n (Config.load ()) n
+  ]
+
+let export_command =
+  let open Command.Let_syntax in
+  Command.basic
+  ~summary:"Export the vocabulary in the given format"
+  [%map_open
+    let filename = anon ("filename" %: string) in
+    fun () -> Commands.export_vocabulary (Config.load ()) filename
   ]
 
 let reset_weights_command =
@@ -70,6 +78,7 @@ let flashcards_command =
     ("reset-weights", reset_weights_command);
     ("search", search_command);
     ("top-n", top_n_command);
+    ("export", export_command);
   ]
 
 let run () =

@@ -30,3 +30,4 @@ val random_record: t ->  Record.t Option.t
 val increase_weight: t -> Record.t -> unit
 val decrease_weight: t -> Record.t -> unit
 val get_top_n: t -> Int.t -> Record.t List.t
+val records: t -> Record.t List.t

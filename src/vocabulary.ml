@@ -97,3 +97,5 @@ let get_top_n { records; weights; } n =
   in
   let compare r1 r2 = - Int.compare (get_weight r1) (get_weight r2) in
   List.take (List.sort ~compare records) n
+
+let records { records; _ } = records
