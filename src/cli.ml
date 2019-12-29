@@ -60,8 +60,9 @@ let export_command =
   Command.basic
   ~summary:"Export the vocabulary in the given format"
   [%map_open
-    let filename = anon ("filename" %: string) in
-    fun () -> Commands.export_vocabulary (Config.load ()) filename
+    let filename = anon ("filename" %: string) and
+        no_headers = flag "-no-headers" no_arg ~doc:"do not include headers" in
+    fun () -> Commands.export_vocabulary ~headers:(not no_headers) (Config.load ()) filename
   ]
 
 let reset_weights_command =

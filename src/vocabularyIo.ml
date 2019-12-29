@@ -16,8 +16,8 @@ module type In = sig
 end
 
 module type Out = sig
-  val to_string: Vocabulary.t -> String.t
-  val to_file: Vocabulary.t -> String.t -> unit
+  val to_string: ?headers:bool -> Vocabulary.t -> String.t
+  val to_file: ?headers:bool -> Vocabulary.t -> String.t -> unit
 end
 
 module type Parser = sig
@@ -25,7 +25,7 @@ module type Parser = sig
 end
 
 module type Formatter = sig
-  val format_records: Vocabulary.Record.t List.t -> String.t
+  val format_records: ?headers:bool -> Vocabulary.Record.t List.t -> String.t
 end
 
 module MakeIn (P: Parser): In = struct
@@ -38,8 +38,8 @@ end
 
 
 module MakeOut (P: Formatter): Out = struct
-  let to_string vocabulary = P.format_records (Vocabulary.records vocabulary)
-  let to_file vocabulary filename =
-    let data = to_string vocabulary in
+  let to_string ?(headers=true) vocabulary = P.format_records ~headers (Vocabulary.records vocabulary)
+  let to_file ?(headers=true) vocabulary filename =
+    let data = to_string ~headers vocabulary in
     Out_channel.write_all ~data filename
 end

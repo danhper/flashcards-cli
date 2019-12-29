@@ -1,5 +1,10 @@
 open Core
 
+let formatters = String.Map.of_alist_exn [
+  ("csv", (module CsvIo.Out: VocabularyIo.Out));
+  ("md", (module MarkdownTable.Out));
+]
+
 let init () =
   Unix.mkdir_p ~perm:0o755 Config.dir;
   match LNoise.linenoise "vocabulary path: " with
@@ -25,9 +30,16 @@ let show config choice =
   | `Word w -> show_record (Vocabulary.search_by_word vocabulary w)
   | `Random -> show_record (Vocabulary.random_record vocabulary)
 
-let export_vocabulary config filename =
+let export_vocabulary ~headers config filename =
   let vocabulary = load_vocabulary config in
-  MarkdownTable.Out.to_file vocabulary filename
+  let (_, ext) = Filename.split_extension filename in
+  let output_module = Option.bind ~f:(Map.find formatters) ext in
+  match output_module with
+  | Some (module F) -> F.to_file ~headers vocabulary filename
+  | None ->
+    let available_extesions = Map.keys formatters |> String.concat ~sep:", " in
+    Out_channel.fprintf Out_channel.stderr
+      "could not infer output format, filename must end with: %s\n" available_extesions
 
 let top_n config n =
   let vocabulary = load_vocabulary config in
