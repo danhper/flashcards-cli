@@ -91,6 +91,20 @@ This is what I am trying out
 
 When sampling a random word, most recent word have a higher probability to show up than older words (old here simply means before in the markdown file) and mistaken words during the quiz have an even higher probability.
 
+## Exporting to AnkiApp
+
+It is quite useful to be able to practice on a phone, I am currently trying
+[Ankiapp](https://www.ankiapp.com/) for that.
+
+The CLI has a command to export to CSV, which can then be imported to
+AnkiApp using their [wep app](https://api.ankiapp.com/nexus/)
+
+The following command worked well enough for my needs:
+
+```
+flashcards export -no-headers -merge-notes -merge-with "<br>" vocab.csv
+```
+
 ## Random word sampling
 
 The weights are computed as follow:
