@@ -37,6 +37,7 @@ let rec run_quiz vocabulary quiz_type =
     let answer_tokens =
       String.split_on_chars ~on:[' '; ','] answer
       |> List.map ~f:normalize_token
+      |> List.filter ~f:(fun token -> String.length token > 0)
     in
     let good_answer = answer = user_answer ||
                       List.exists ~f:((=) user_answer) answer_tokens in
