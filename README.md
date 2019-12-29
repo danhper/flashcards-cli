@@ -91,6 +91,14 @@ This is what I am trying out
 
 When sampling a random word, most recent word have a higher probability to show up than older words (old here simply means before in the markdown file) and mistaken words during the quiz have an even higher probability.
 
+To show a random word each time a new terminal is spawned, adding something as follow in `~/.bashrc` or `~/.zshrc` should do the job.
+
+```bash
+if command -v flashcards > /dev/null 2>&1
+    flashcards show -random
+end
+```
+
 ## Exporting to AnkiApp
 
 It is quite useful to be able to practice on a phone, I am currently trying
