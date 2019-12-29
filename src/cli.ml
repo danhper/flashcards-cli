@@ -61,8 +61,12 @@ let export_command =
   ~summary:"Export the vocabulary in the given format"
   [%map_open
     let filename = anon ("filename" %: string) and
-        no_headers = flag "-no-headers" no_arg ~doc:"do not include headers" in
-    fun () -> Commands.export_vocabulary ~headers:(not no_headers) (Config.load ()) filename
+        no_headers = flag "-no-headers" no_arg ~doc:"do not include headers" and
+        merge_notes = flag "-merge-notes" no_arg ~doc:"merge notes with translation" and
+        merge_with = flag "-merge-with" (optional_with_default "\n" string) ~doc:"string to use to merge notes"
+    in
+    let options = VocabularyIo.FormatterOptions.({ merge_notes; merge_with; headers = not no_headers }) in
+    fun () -> Commands.export_vocabulary ~options (Config.load ()) filename
   ]
 
 let reset_weights_command =

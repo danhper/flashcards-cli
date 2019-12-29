@@ -9,6 +9,7 @@ module Record: sig
 
   val create: String.t -> String.t -> String.t Option.t -> t
   val format: t -> String.t
+  val to_list: ?merge_notes:bool -> ?merge_with:string -> t -> String.t List.t
 end
 
 type t

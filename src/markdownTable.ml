@@ -19,14 +19,15 @@ module Parser: VocabularyIo.Parser = struct
 end
 
 module Formatter: VocabularyIo.Formatter = struct
-  let format_records ?(headers=true) records =
-    let open Vocabulary.Record in
-    let lines = if headers then [
-      "German | Translation | Notes";
+  let format_records ?(options=VocabularyIo.FormatterOptions.defaults) records =
+    let lines = if options.headers then [
+      "Word   | Translation | Notes";
       "-------|-------------|------";
     ] else [] in
     let format_record record =
-      let row = [record.word; record.translation; Option.value ~default:"" record.notes] in
+      let row = Vocabulary.Record.to_list
+        ~merge_notes:options.merge_notes ~merge_with:options.merge_with record
+      in
       String.concat ~sep:" | " row
     in
     String.concat ~sep:"\n" (lines @ (List.map ~f:format_record records))

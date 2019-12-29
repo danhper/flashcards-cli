@@ -1,7 +1,7 @@
 open Core
 
 let formatters = String.Map.of_alist_exn [
-  ("csv", (module CsvIo.Out: VocabularyIo.Out));
+  ("csv", (module Csv.Out: VocabularyIo.Out));
   ("md", (module MarkdownTable.Out));
 ]
 
@@ -30,12 +30,13 @@ let show config choice =
   | `Word w -> show_record (Vocabulary.search_by_word vocabulary w)
   | `Random -> show_record (Vocabulary.random_record vocabulary)
 
-let export_vocabulary ~headers config filename =
+let export_vocabulary ~options config filename =
   let vocabulary = load_vocabulary config in
   let (_, ext) = Filename.split_extension filename in
   let output_module = Option.bind ~f:(Map.find formatters) ext in
   match output_module with
-  | Some (module F) -> F.to_file ~headers vocabulary filename
+  | Some (module F) ->
+    F.to_file ~options vocabulary filename
   | None ->
     let available_extesions = Map.keys formatters |> String.concat ~sep:", " in
     Out_channel.fprintf Out_channel.stderr

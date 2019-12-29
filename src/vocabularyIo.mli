@@ -6,8 +6,17 @@ module type Parser = sig
   val parse_records: String.t -> Vocabulary.Record.t List.t
 end
 
+module FormatterOptions: sig
+  type t = {
+    headers: bool;
+    merge_notes: bool;
+    merge_with: string;
+  }
+  val defaults: t
+end
+
 module type Formatter = sig
-  val format_records: ?headers:bool -> Vocabulary.Record.t List.t -> String.t
+  val format_records: ?options:FormatterOptions.t -> Vocabulary.Record.t List.t -> String.t
 end
 
 module type In = sig
@@ -16,8 +25,8 @@ module type In = sig
 end
 
 module type Out = sig
-  val to_string: ?headers:bool -> Vocabulary.t -> String.t
-  val to_file: ?headers:bool -> Vocabulary.t -> String.t -> unit
+  val to_string: ?options:FormatterOptions.t -> Vocabulary.t -> String.t
+  val to_file: ?options:FormatterOptions.t -> Vocabulary.t -> String.t -> unit
 end
 
 module MakeIn (In: Parser): In

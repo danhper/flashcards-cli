@@ -11,6 +11,12 @@ module Record = struct
   let format { word; translation; notes } =
     let f notes = " − " ^ notes in
     word ^ ": " ^ translation ^ (Option.value ~default:"" (Option.map ~f notes))
+
+  let to_list ?(merge_notes=false) ?(merge_with="\n") { word; translation; notes = maybe_notes } =
+    match (maybe_notes, merge_notes) with
+    | _, false -> [word; translation; Option.value ~default:"" maybe_notes]
+    | Some notes, true -> [word; translation ^ merge_with ^ notes]
+    | None, true -> [word; translation]
 end
 
 

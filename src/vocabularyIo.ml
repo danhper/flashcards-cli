@@ -10,22 +10,34 @@ let load_weights () =
     then Vocabulary.Weights.of_json (Yojson.Safe.from_file Config.weights_path)
     else None
 
+module FormatterOptions = struct
+  type t = {
+    headers: bool;
+    merge_notes: bool;
+    merge_with: string;
+  }
+
+  let defaults = { headers = true; merge_notes = false; merge_with = "\n"; }
+end
+
+
 module type In = sig
   val from_string: String.t -> Vocabulary.t
   val from_file: String.t -> Vocabulary.t
 end
 
 module type Out = sig
-  val to_string: ?headers:bool -> Vocabulary.t -> String.t
-  val to_file: ?headers:bool -> Vocabulary.t -> String.t -> unit
+  val to_string: ?options:FormatterOptions.t -> Vocabulary.t -> String.t
+  val to_file: ?options:FormatterOptions.t -> Vocabulary.t -> String.t -> unit
 end
+
 
 module type Parser = sig
   val parse_records: String.t -> Vocabulary.Record.t List.t
 end
 
 module type Formatter = sig
-  val format_records: ?headers:bool -> Vocabulary.Record.t List.t -> String.t
+  val format_records: ?options:FormatterOptions.t -> Vocabulary.Record.t List.t -> String.t
 end
 
 module MakeIn (P: Parser): In = struct
@@ -38,8 +50,8 @@ end
 
 
 module MakeOut (P: Formatter): Out = struct
-  let to_string ?(headers=true) vocabulary = P.format_records ~headers (Vocabulary.records vocabulary)
-  let to_file ?(headers=true) vocabulary filename =
-    let data = to_string ~headers vocabulary in
+  let to_string ?(options=FormatterOptions.defaults) vocabulary = P.format_records ~options (Vocabulary.records vocabulary)
+  let to_file ?(options=FormatterOptions.defaults) vocabulary filename =
+    let data = to_string ~options vocabulary in
     Out_channel.write_all ~data filename
 end
