@@ -12,7 +12,7 @@ Pre-compiled binary for Linux is available from the [releases page](https://gith
 Simply download the binary, put it somewhere in your path and make it executable.
 
 ```
-wget https://github.com/danhper/flashcards-cli/releases/download/v0.1.0/flashcards-cli-linux-x64.exe -O /usr/local/bin/flashcards
+wget https://github.com/danhper/flashcards-cli/releases/download/v0.2.0/flashcards-cli -O /usr/local/bin/flashcards
 chmod +x /usr/local/bin/flashcards
 ```
 
