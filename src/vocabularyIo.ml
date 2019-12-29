@@ -13,11 +13,13 @@ let load_weights () =
 module FormatterOptions = struct
   type t = {
     headers: bool;
-    merge_notes: bool;
-    merge_with: string;
+    record_options: Vocabulary.Record.FormatOptions.t;
   }
 
-  let defaults = { headers = true; merge_notes = false; merge_with = "\n"; }
+  let defaults = {
+    headers = true;
+    record_options = Vocabulary.Record.FormatOptions.defaults;
+  }
 end
 
 

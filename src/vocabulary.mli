@@ -7,9 +7,19 @@ module Record: sig
     notes: String.t Option.t;
   }
 
+  module FormatOptions: sig
+    type t = {
+      merge_notes: bool;
+      merge_with: string;
+      swap_translation: bool;
+    }
+    val defaults: t
+  end
+
   val create: String.t -> String.t -> String.t Option.t -> t
   val format: t -> String.t
-  val to_list: ?merge_notes:bool -> ?merge_with:string -> t -> String.t List.t
+  val to_list: ?options:FormatOptions.t -> t -> String.t List.t
+  val make_headers: FormatOptions.t -> String.t List.t
 end
 
 type t

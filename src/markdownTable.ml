@@ -20,14 +20,15 @@ end
 
 module Formatter: VocabularyIo.Formatter = struct
   let format_records ?(options=VocabularyIo.FormatterOptions.defaults) records =
-    let lines = if options.headers then [
-      "Word   | Translation | Notes";
-      "-------|-------------|------";
-    ] else [] in
+    let lines =
+      if options.headers then
+        let headers = Vocabulary.Record.make_headers options.record_options in
+        let sep = List.map ~f:(fun s -> String.make (String.length s) '-') headers in
+        [String.concat ~sep:" | "  headers; String.concat ~sep:"-|-" sep]
+        else []
+    in
     let format_record record =
-      let row = Vocabulary.Record.to_list
-        ~merge_notes:options.merge_notes ~merge_with:options.merge_with record
-      in
+      let row = Vocabulary.Record.to_list ~options:options.record_options record in
       String.concat ~sep:" | " row
     in
     String.concat ~sep:"\n" (lines @ (List.map ~f:format_record records))

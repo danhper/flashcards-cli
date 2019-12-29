@@ -9,8 +9,7 @@ end
 module FormatterOptions: sig
   type t = {
     headers: bool;
-    merge_notes: bool;
-    merge_with: string;
+    record_options: Vocabulary.Record.FormatOptions.t;
   }
   val defaults: t
 end

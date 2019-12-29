@@ -62,10 +62,12 @@ let export_command =
   [%map_open
     let filename = anon ("filename" %: string) and
         no_headers = flag "-no-headers" no_arg ~doc:"do not include headers" and
+        swap_translation = flag "-swap-translation" no_arg ~doc:"Swap translation and notes" and
         merge_notes = flag "-merge-notes" no_arg ~doc:"merge notes with translation" and
         merge_with = flag "-merge-with" (optional_with_default "\n" string) ~doc:"string to use to merge notes"
     in
-    let options = VocabularyIo.FormatterOptions.({ merge_notes; merge_with; headers = not no_headers }) in
+    let record_options = Vocabulary.Record.FormatOptions.({  merge_notes; merge_with; swap_translation; }) in
+    let options = VocabularyIo.FormatterOptions.({ record_options; headers = not no_headers }) in
     fun () -> Commands.export_vocabulary ~options (Config.load ()) filename
   ]
 

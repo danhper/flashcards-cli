@@ -7,16 +7,41 @@ module Record = struct
     notes: String.t Option.t;
   }
 
+  module FormatOptions = struct
+    type t = {
+      merge_notes: bool;
+      merge_with: string;
+      swap_translation: bool;
+    }
+
+    let defaults = {
+      merge_notes = false;
+      merge_with = "\n";
+      swap_translation = false;
+    }
+  end
+
   let create word translation notes = { word; translation; notes }
   let format { word; translation; notes } =
     let f notes = " − " ^ notes in
     word ^ ": " ^ translation ^ (Option.value ~default:"" (Option.map ~f notes))
 
-  let to_list ?(merge_notes=false) ?(merge_with="\n") { word; translation; notes = maybe_notes } =
-    match (maybe_notes, merge_notes) with
-    | _, false -> [word; translation; Option.value ~default:"" maybe_notes]
-    | Some notes, true -> [word; translation ^ merge_with ^ notes]
-    | None, true -> [word; translation]
+  let order_elems swap_translation = if swap_translation then Tuple2.swap else Fn.id
+
+  let to_list ?(options=FormatOptions.defaults) { word; translation; notes = maybe_notes } =
+    let open FormatOptions in
+    let (first_elem, second_elem) = order_elems options.swap_translation (word, translation) in
+    match (maybe_notes, options.merge_notes) with
+    | _, false -> [first_elem; second_elem; Option.value ~default:"" maybe_notes]
+    | Some notes, true -> [first_elem; second_elem ^ options.merge_with ^ notes]
+    | None, true -> [first_elem; second_elem]
+
+  let make_headers options =
+    let open FormatOptions in
+    let (first_elem, second_elem) = order_elems options.swap_translation ("Word", "Translation") in
+    if options.merge_notes
+      then [first_elem; second_elem]
+      else [first_elem; second_elem; "Notes"]
 end
 
 
