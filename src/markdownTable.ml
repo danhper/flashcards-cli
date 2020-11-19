@@ -3,7 +3,7 @@ open Core
 module Parser: VocabularyIo.Parser = struct
   let parse_records markdown =
     let transform_line line = 
-      let get_notes notes = if notes = "" then None else Some notes in
+      let get_notes notes = if String.(notes = "") then None else Some notes in
       match List.map ~f:String.strip (String.split ~on:'|' line) with
       | [word; translation] ->
         Some (Vocabulary.Record.create word translation None)

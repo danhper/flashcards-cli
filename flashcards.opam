@@ -5,14 +5,14 @@ synopsis: "Terminal based flashcards"
 maintainer: "Daniel Perez <daniel@perez.sh>"
 authors: "Daniel Perez <daniel@perez.sh>"
 license: "MIT"
-homepage: "https://github.com/tuvistavie/flashcards-cli"
-bug-reports: "https://github.com/tuvistavie/flashcards-cli"
+homepage: "https://github.com/danhper/flashcards-cli"
+bug-reports: "https://github.com/danhper/flashcards-cli"
 build: ["dune" "build" "--root" "." "-j" jobs "@install"]
 depends: [
-  "core"                {>= "v0.12" & < "v0.13"}
+  "core"                {>= "v0.14" & < "v0.15"}
   "yojson"              {>= "1.6"   & < "2.0"}
   "ppx_deriving_yojson" {>= "3.3"   & < "4.0"}
   "linenoise"           {>= "1.2"   & < "2.0"}
 
-  "dune"                {build & >= "1.0" & < "2.0"}
+  "dune"                {build & >= "2.0" & < "3.0"}
 ]

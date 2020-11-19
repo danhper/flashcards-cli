@@ -27,7 +27,8 @@ let rec run_quiz vocabulary quiz_type =
   let prompt = question ^ ": " in
 
   let normalize_token token =
-    String.strip ~drop:(fun v -> v = '(' || v = ')') token
+    let drop v = Char.(v = '(' || v = ')') in
+    String.strip ~drop token
   in
 
   match LNoise.linenoise prompt with

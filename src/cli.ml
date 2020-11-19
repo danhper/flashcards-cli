@@ -6,7 +6,7 @@ let show_command =
   ~summary:"Shows a single flashcard."
   ~readme:(fun _ -> "Only one of the three flags must be provided")
   [%map_open
-    let choice = choose_one ~if_nothing_chosen:`Raise
+    let choice = choose_one ~if_nothing_chosen:Raise
       [ flag "-translation" (optional string)
         ~aliases:["-t"] ~doc:"translation of the card to show"
       |> map ~f:(Option.map ~f:(fun v -> `Translation v))

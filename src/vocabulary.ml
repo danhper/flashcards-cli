@@ -92,14 +92,14 @@ let weights t = t.weights
 let search_by_word { records; _ } word =
   let f record =
     let word_tokens = String.split ~on:' ' (String.lowercase record.Record.word) in
-    List.exists ~f:((=) (String.lowercase word)) word_tokens
+    List.exists ~f:(String.(=) (String.lowercase word)) word_tokens
   in
   List.find ~f records
 
 let search_by_translation { records; _ } translation =
   let translation = String.lowercase translation in
   let get_translation record = String.lowercase record.Record.translation in
-  let exact_f record = get_translation record = translation in
+  let exact_f record = String.(get_translation record = translation) in
   let fuzzy_f record = String.is_substring ~substring:translation (get_translation record) in
   match List.find ~f:exact_f records with  (* not Option.first_some to keep it lazy *)
   | None -> List.find ~f:fuzzy_f records
@@ -117,7 +117,7 @@ let random_record { records; weights } =
   let (sum, cum_weights) = List.fold ~init:(0., []) ~f:cdf_f weights in
   let cdf_probs = List.rev_map ~f:(fun v -> v /. sum) cum_weights in
   let random_value = Random.float 1. in
-  let res = List.findi ~f:(fun _i v -> random_value <= v) cdf_probs in
+  let res = List.findi ~f:(fun _i v -> Float.(random_value <= v)) cdf_probs in
   let index = Option.map ~f:fst res in
   Option.bind ~f:(List.nth records) index
 
