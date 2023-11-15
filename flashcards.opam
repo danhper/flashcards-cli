@@ -12,10 +12,11 @@ build: [
   ["dune" "build" "-p" name "-j" jobs "@all"]
 ]
 depends: [
-  "core"                {>= "v0.14" & < "v0.15"}
+  "core"                {>= "v0.16" & < "v0.17"}
+  "core_unix"           {>= "v0.16" & < "v0.17"}
   "yojson"              {>= "1.6"   & < "2.0"}
   "ppx_deriving_yojson" {>= "3.3"   & < "4.0"}
   "linenoise"           {>= "1.2"   & < "2.0"}
 
-  "dune"                {build & >= "2.0" & < "3.0"}
+  "dune"                {build & >= "2.0" & < "4.0"}
 ]

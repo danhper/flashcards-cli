@@ -6,14 +6,14 @@ let formatters = String.Map.of_alist_exn [
 ]
 
 let init () =
-  Unix.mkdir_p ~perm:0o755 Config.dir;
+  Core_unix.mkdir_p ~perm:0o755 Config.dir;
   match LNoise.linenoise "vocabulary path: " with
   | Some filepath -> Config.save (Config.create filepath)
   | None -> Out_channel.prerr_endline "could not read vocabulary path"
 
 let reset_weights () =
-  if Sys.file_exists_exn Config.weights_path
-    then Unix.unlink Config.weights_path
+  if Sys_unix.file_exists_exn Config.weights_path
+    then Core_unix.unlink Config.weights_path
 
 let show_record opt_record = match opt_record with
   | Some record -> Out_channel.print_endline (Vocabulary.Record.format record)

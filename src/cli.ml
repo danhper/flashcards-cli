@@ -90,4 +90,4 @@ let flashcards_command =
 
 let run () =
   Random.self_init ();
-  Command.run ~build_info:"" ~version:"0.1" flashcards_command
+  Command_unix.run ~build_info:"" ~version:"0.1" flashcards_command

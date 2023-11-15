@@ -6,7 +6,7 @@ let save_weights vocab =
   Yojson.Safe.to_file Config.weights_path json_weights
 
 let load_weights () =
-  if Sys.file_exists_exn Config.weights_path
+  if Sys_unix.file_exists_exn Config.weights_path
     then Vocabulary.Weights.of_json (Yojson.Safe.from_file Config.weights_path)
     else None
 

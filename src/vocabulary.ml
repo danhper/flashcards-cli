@@ -49,7 +49,7 @@ module Weights = struct
   type t = Int.t String.Table.t
   type int_hashtbl = (string * int) list [@@deriving yojson]
 
-  let to_json t = int_hashtbl_to_yojson (String.Table.to_alist t)
+  let to_json t = int_hashtbl_to_yojson (Hashtbl.to_alist t)
   let of_json json =
     json
     |> int_hashtbl_of_yojson
